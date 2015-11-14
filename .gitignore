@@ -1,0 +1,10 @@
+*.3ds
+*.app
+*.cia
+
+*.bin
+*.rsf
+*.db
+
+/*_unpacked
+/0004*

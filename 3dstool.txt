@@ -1,0 +1,122 @@
+3dstool 1.0.8 by dnasdw
+
+usage: 3dstool [option...] [option]...
+
+option:
+action:
+  -x, --extract extract the target file
+  -c, --create  create the target file
+  -e, --encrypt encrypt the target file
+  -u, --uncompress
+                uncompress the target file
+  -z, --compress
+                compress the target file
+  -r, --trim    trim the cci file
+  -p, --pad     pad the cci file
+      --diff    create the patch file from the old file and the new file
+      --patch   apply the patch file to the target file
+      --sample  show the samples
+  -h, --help    show this help
+
+common:
+  -t, --type    [[card|cci|3ds]|[nand|exec|cxi]|[data|cfa]|exefs|romfs|banner]
+		the type of the file, optional
+  -f, --file    the target file, required
+  -v, --verbose show the info
+ cci/cxi/cfa/exefs:
+  extract/create:
+      --header  the header file of the target file
+ encrypt:
+      --key0    short for --key 00000000000000000000000000000000
+      --key     the hex string of the key used by the AES-CTR encryption
+      --counter the hex string of the counter used by the AES-CTR encryption
+      --xor     the xor data file used by the xor encryption
+ compress:
+      --compress-align
+                [1|4|8|16|32]
+		the alignment of the compressed filesize
+  uncompress:
+      --compress-type
+                [blz|lz(ex)]
+		the type of the compress
+      --compress-out
+                the output file of uncompressed or compressed
+ diff:
+      --old     the old file
+      --new     the new file
+  patch:
+      --patch-file
+                the patch file
+
+cci:
+ extract/create:
+  -0, --partition0
+                the cxi file of the cci file at partition 0
+  -1, --partition1
+                the cfa file of the cci file at partition 1
+  -2, --partition2
+                the cfa file of the cci file at partition 2
+  -3, --partition3
+                the cfa file of the cci file at partition 3
+  -4, --partition4
+                the cfa file of the cci file at partition 4
+  -5, --partition5
+                the cfa file of the cci file at partition 5
+  -6, --partition6
+                the cfa file of the cci file at partition 6
+  -7, --partition7
+                the cfa file of the cci file at partition 7
+ trim:
+      --trim-after-partition
+                [0~7], the index of the last reserve partition, optional
+
+cxi:
+ create:
+      --not-update-exh-hash
+      --not-update-extendedheader-hash
+                do not update the extendedheader hash
+      --not-update-exefs-hash
+                do not update the exefs super block hash
+      --not-update-romfs-hash
+                do not update the romfs super block hash
+      --not-pad do not add the pad data
+  extract:
+      --exh     
+      --extendedheader
+                the extendedheader file of the cxi file
+      --logo    
+      --logoregion
+                the logoregion file of the cxi file
+      --plain   
+      --plainregion
+                the plainregion file of the cxi file
+      --exefs   the exefs file of the cxi file
+   encrypt:
+      --exh-xor 
+      --extendedheader-xor
+                the xor data file used by encrypt the extendedheader of the cxi file
+      --exefs-xor
+                the xor data file used by encrypt the exefs of the cxi file
+      --exefs-top-xor
+                the xor data file used by encrypt the top section of the exefs of the cxi file
+ cfa:
+  extract/create:
+      --romfs   the romfs file of the cxi/cfa file
+   encrypt:
+      --romfs-xor
+                the xor data file used by encrypt the romfs of the cxi/cfa file
+
+exefs:
+ extract/create:
+      --exefs-dir
+                the exefs dir for the exefs file
+
+romfs:
+ extract/create:
+      --romfs-dir
+                the romfs dir for the romfs file
+
+banner:
+ extract/create:
+      --banner-dir
+                the banner dir for the banner file

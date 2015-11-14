@@ -1,0 +1,53 @@
+CTR MAKEROM 0.13
+(C) 3DSGuy 2014
+Usage: makerom.exe [options... ]
+Option          Parameter           Explanation
+GLOBAL OPTIONS:
+ -help                              Display this text
+ -rsf           <file>              ROM Spec File (*.rsf)
+ -f             <ncch|cci|cia>      Output format, defaults to 'ncch'
+ -o             <file>              Output file
+ -v                                 Verbose output
+ -DNAME=VALUE                       Substitute values in RSF file
+KEY OPTIONS:
+ -target        <t|d|p>             Target for crypto, defaults to 't'
+                                    't' Test(false) Keys & prod Certs
+                                    'd' Development Keys & Certs
+                                    'p' Production Keys & Certs
+ -ckeyid        <index>             Override the automatic common key selection
+ -ncchseckey    <index>             Ncch keyX index ('0'=1.0+, '1'=7.0+)
+ -showkeys                          Display the loaded key chain
+ -fsign                             Ignore invalid signatures
+NCCH OPTIONS:
+ -elf           <file>              ELF file
+ -icon          <file>              Icon file
+ -banner        <file>              Banner file
+ -logo          <file>              Logo file (Overrides "BasicInfo/Logo" in RSF)
+ -desc          <apptype>:<fw>      Specify Access Descriptor template
+ -exefslogo                         Include Logo in ExeFS (Required for usage on <5.0 systems)
+NCCH REBUILD OPTIONS:
+ -code          <file>              Decompressed ExeFS ".code"
+ -exheader      <file>              Exheader template
+ -plainrgn      <file>              Plain Region binary
+ -romfs         <file>              RomFS binary
+CCI OPTIONS:
+ -content       <file>:<index>      Specify content files
+ -devcci                            Use external CTRSDK "CardInfo" method
+ -nomodtid                          Don't Modify Content TitleIDs
+ -alignwr                           Align writeable region to the end of last NCCH
+ -cverinfo      <file>:<cia|tmd>    Include cver title info
+CIA OPTIONS:
+ -content       <file>:<index>:<id> Specify content files
+ -major         <version>           Major version
+ -minor         <version>           Minor version
+ -micro         <version>           Micro version
+ -dver          <version>           Data-title version
+ -deviceid      <hex id>            3DS unique device ID
+ -esaccid       <hex id>            e-Shop account ID
+ -rand                              Use a random title key
+ -dlc                               Create DLC CIA
+ -srl           <srl file>          Package a TWL SRL in a CIA
+NCCH CONTAINER CONVERSION:
+ -ccitocia      <cci file>          Convert CCI to CIA
+ -ciatocci      <cia file>          Convert CIA to CCI
+ -inclupd                           Include "Update NCCH" in CCI to CIA conversion

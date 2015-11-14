@@ -1,0 +1,48 @@
+Usage: ctrtool [options...] <file>
+CTRTOOL (c) neimod, 3DSGuy.
+
+Options:
+  -i, --info         Show file info.
+                          This is the default action.
+  -x, --extract      Extract data from file.
+                          This is also the default action.
+  -p, --plain        Extract data without decrypting.
+  -r, --raw          Keep raw data, don't unpack.
+  -k, --keyset=file  Specify keyset file.
+  -v, --verbose      Give verbose output.
+  -y, --verify       Verify hashes and signatures.
+  --unitsize=size    Set media unit size (default 0x200).
+  --commonkey=key    Set common key.
+  --titlekey=key     Set tik title key.
+  --ncchkey=key      Set ncch key.
+  --ncchsyskey=key   Set ncch fixed system key.
+  --showkeys         Show the keys being used.
+  -t, --intype=type	 Specify input file type [ncsd, ncch, exheader, cia, tmd, lzss,
+                        firm, cwav, exefs, romfs]
+LZSS options:
+  --lzssout=file	 Specify lzss output file
+CXI/CCI options:
+  -n, --ncch=index   Specify NCCH partition index.
+  --exefs=file       Specify ExeFS file path.
+  --exefsdir=dir     Specify ExeFS directory path.
+  --romfs=file       Specify RomFS file path.
+  --exheader=file    Specify Extended Header file path.
+  --logo=file        Specify Logo file path.
+CIA options:
+  --certs=file       Specify Certificate chain file path.
+  --tik=file         Specify Ticket file path.
+  --tmd=file         Specify TMD file path.
+  --contents=file    Specify Contents file path.
+  --meta=file        Specify Meta file path.
+FIRM options:
+  --firmdir=dir      Specify Firm directory path.
+CWAV options:
+  --wav=file         Specify wav output file.
+  --wavloops=count   Specify wav loop count, default 0.
+EXEFS options:
+  --decompresscode   Decompress .code section
+                     (only needed when using raw EXEFS file)
+ROMFS options:
+  --romfsdir=dir     Specify RomFS directory path.
+  --listromfs        List files in RomFS.
+
