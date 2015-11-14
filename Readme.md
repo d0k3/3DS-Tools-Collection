@@ -13,3 +13,4 @@ This is just a small collection of various tools useful for modification of CIA 
 * make_cdn_cia by Tiger21820 - https://github.com/Tiger21820/ctr_toolkit
 * Various Python scripts by archshift - https://github.com/archshift/Decrypt9
 * 3DSlink by Dave J. Murphy - http://davejmurphy.com/3dslink/
+* 3DNUS by ground - https://gbatemp.net/threads/3dnus.376488/
