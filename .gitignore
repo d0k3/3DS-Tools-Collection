@@ -2,6 +2,10 @@
 *.app
 *.cia
 
+*.rar
+*.zip
+*.7z
+
 *.bin
 *.rsf
 *.db
