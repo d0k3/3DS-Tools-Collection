@@ -14,3 +14,4 @@ This is just a small collection of various tools useful for modification of CIA 
 * Various Python scripts by archshift - https://github.com/archshift/Decrypt9
 * 3DSlink by Dave J. Murphy - http://davejmurphy.com/3dslink/
 * 3DNUS by ground - https://gbatemp.net/threads/3dnus.376488/
+* 3DS Release Explorer by Ryogo - https://bitbucket.org/Ryogo/3ds-release-explorer
