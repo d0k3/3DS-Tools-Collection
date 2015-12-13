@@ -1,7 +1,7 @@
 **3DS Tools Collection by d0k3**
 ----------------------------
 
-This is just a small collection of various tools useful for modification of CIA and CCI files specific to the 3DS console. This collection contains:
+This is a small collection of various tools useful for modification and organization of CIA and CCI files specific to the 3DS console. This collection contains:
 * ctrtool and makerom by profi200 - https://github.com/profi200/Project_CTR
 * 3DStool by dnasdw - https://github.com/dnasdw/3dstool
 * xorer by archshift - https://github.com/archshift/xorer
