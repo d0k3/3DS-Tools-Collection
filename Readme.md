@@ -11,6 +11,7 @@ This is just a small collection of various tools useful for modification of CIA 
 * 3DSFAT16tool by d0k3 - https://github.com/d0k3/3DSFAT16tool
 * FunkyCIA.py by Cearp - https://gbatemp.net/threads/release-funkycia2-build-cias-from-your-eshop-content-super-easy-and-fast-2-1-fix.376941/
 * make_cdn_cia by Tiger21820 - https://github.com/Tiger21820/ctr_toolkit
+* rom_tool and extdata_tool by Tiger21820 - https://github.com/Tiger21820/ctr_toolkit
 * Various Python scripts by archshift - https://github.com/archshift/Decrypt9
 * 3DSlink by Dave J. Murphy - http://davejmurphy.com/3dslink/
 * 3DNUS by ground - https://gbatemp.net/threads/3dnus.376488/
