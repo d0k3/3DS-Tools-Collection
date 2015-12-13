@@ -8,6 +8,7 @@ This is a small collection of various tools useful for modification and organiza
 * 3DSlink by Dave J. Murphy - http://davejmurphy.com/3dslink/
 * smdhtool by devkitPro - https://github.com/devkitPro/3dstools
 * 3DSFAT16tool by d0k3 - https://github.com/d0k3/3DSFAT16tool
+* SEEDconv by d0k3 - https://github.com/d0k3/SEEDconv
 * make_cdn_cia by Tiger21820 - https://github.com/Tiger21820/ctr_toolkit
 * rom_tool and extdata_tool by Tiger21820 - https://github.com/Tiger21820/ctr_toolkit
 * FunkyCIA.py by Cearp - https://gbatemp.net/threads/release-funkycia2-build-cias-from-your-eshop-content-super-easy-and-fast-2-1-fix.376941/
