@@ -19,3 +19,4 @@ This is a small collection of various tools useful for modification and organiza
 * 3DS Release Explorer by Ryogo - https://bitbucket.org/Ryogo/3ds-release-explorer
 * EvoCRC by AdvanScene - http://www.advanscene.com/
 * NDSTokyoTrim by eden.fm - http://eden.fm/ndstoykotrim/
+* 3DS Explorer by Eli Sherer - https://code.google.com/p/3dsexplorer/
