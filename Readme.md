@@ -20,3 +20,4 @@ This is a small collection of various tools useful for modification and organiza
 * EvoCRC by AdvanScene - http://www.advanscene.com/
 * NDSTokyoTrim by eden.fm - http://eden.fm/ndstoykotrim/
 * 3DS Explorer by Eli Sherer - https://code.google.com/p/3dsexplorer/
+* Gateway ROM Cleaner by Skar the Blood Child - https://gbatemp.net/threads/gateway-rom-patcher.364034/
