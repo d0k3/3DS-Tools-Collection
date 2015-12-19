@@ -1,6 +1,8 @@
 *.3ds
 *.app
 *.cia
+*.cxi
+*.cfa
 
 *.rar
 *.zip
@@ -13,5 +15,7 @@
 
 /*_unpacked
 /0004*
+
+00000000*
 
 releases.xml

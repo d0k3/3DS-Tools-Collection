@@ -15,6 +15,7 @@ This is a small collection of various tools useful for modification and organiza
 * CDNto3DS and SDto3DS by Relys - https://github.com/Relys/3DS_Multi_Decryptor
 * EmuNAND tool by n1ghty - https://gbatemp.net/threads/emunand-tool-release-and-support-thread.359239/
 * 3DS Simple CIA Converter by Riku - https://gbatemp.net/threads/release-3ds-simple-cia-converter.384559/
+* 3DS Simple GBA Converter by Riku - https://gbatemp.net/threads/release-agb_firm-signature-patcher-gba-rom-converter.390313/
 * 3DNUS by ground - https://gbatemp.net/threads/3dnus.376488/
 * 3DS Release Explorer by Ryogo - https://bitbucket.org/Ryogo/3ds-release-explorer
 * EvoCRC by AdvanScene - http://www.advanscene.com/
