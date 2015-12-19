@@ -22,3 +22,4 @@ This is a small collection of various tools useful for modification and organiza
 * NDSTokyoTrim by eden.fm - http://eden.fm/ndstoykotrim/
 * 3DS Explorer by Eli Sherer - https://code.google.com/p/3dsexplorer/
 * Gateway ROM Cleaner by Skar the Blood Child - https://gbatemp.net/threads/gateway-rom-patcher.364034/
+* Crappy Tiny Reader by PsyKo - http://www.3dbrew.org/wiki/Crappy_Tiny_Reader

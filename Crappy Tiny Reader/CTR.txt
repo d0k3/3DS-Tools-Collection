@@ -1,0 +1,80 @@
+    .____________________________________________________________________.
+    |::::'                                                               |
+    |::'                                                                 |
+    |'                                                                   |
+    |           _______/_ ________   _/_________________/________        |
+    |          /   ___/__/    ___/___/  _     /   _    /  _     /        |
+    |         _\____     \   /      /   /____/_   /   /   /____/_        |
+     ______  (___________/_________/__________/__/___/__________/        |
+    _\_    \ _/________/____     _/_______   ____     _____  _/________ _____/_
+   /  _\  _/_/   _    /   __|____/  _    /___\_  \   /  __/__/   _    //  __/__
+  /   \     \    /___/_   \     /   /___/_   _/   \__\__     \   /___/_\__     \
+ /_____\     \________/_________\________/___\_____/_________/________/________/
+        \______/
+    |                                                                   .|
+    |                                                                 .::|
+    |                            _____________                      .::::|
+    '-----------[NDS/DSi]--------\           /----------[3DS]------------'
+                                  \         /
+                                   \       /
+                                    \     /
+                                     \   /
+                                      \ /
+                                       '
+  __:______\                                                       /______:__
+  __:_______                CTR - Crappy Tiny Reader               _______:__
+    :      /______________                           ______________\      :
+                          )___________   ___________(
+                                      \ /
+
+
+
++ About
+"CTR" is a small PC utility designed to read and display infos from
+Nintendo DS, DSi and Nintendo 3DS ROMs.
+
++ Requirements
+PC running Windows and .NET framework 4.0 installed at least.
+Tested and working fine on XP, Vista, 7, 8, 8.1, 10 (x86/x64)
+
++ Special thanks to
+3dbrew.org community for their help & docs
+Our beta testers, and all guys giving us new ideas for the app
+MisterD for his ascii job
+
++ Changelog
+v1.8.4
+- 3DS: "Remove updates" operation is now working fine, bug fixed (thanks iCEQB)
+- 3DS: More conditions have been added to trimming/ripping functions, Card2 games are now skipped
+- 3DS: Confirm window will now pop up before starting the Card2 save deletion process
+- 3DS: Results of trim/untrim/rip/delete operations will now be displayed at the end of process
+- various wording edited
+
+v1.8.3
+- 4 new maker codes added (thanks Jim)
+- 3DS: "AP check" will display if the new antipiracy flag is set (if present, .3ds games will not work on Sky3DS or Gateway fw < 3.4).
+- 3DS: "Header check" area has been moved from Tools to Partitions tab.
+- 3DS: "Remove updates" feature has been updated, now the New3DS update partition will be deleted too.
+- various wording edited/removed
+
+v1.8.2
+- 4 new maker codes added, 1 old one modified
+- 3DS: ROM version (revision) added
+- 3DS: partition serial will be displayed even if the partition is incomplete
+
+v1.8.1
+- 28 new maker codes added, 3 old ones modified
+- 3DS: "New3DS Up." (New3DS Update Data) text added in front of Partition #6
+- NDS/DSi: DSiWare detection improved, titles will no longer be displayed as "DSi only"
+- NDS/DSi: No more alert displayed for NDS games with an empty maker code
+
+v1.8
+- 18 new maker codes added, 2 old ones modified
+- NDS/DSi: new autostart value added.
+- NDS/DSi: new detection added on the secure area to find if the ROM is decrypted or just bad.
+- NDS/DSi: for DSi ROMs, "Used space" is now calculated correctly and includes the TWL areas.
+- NDS/DSi: DSiWare is displayed in ROM type if detected.
+- NDS/DSi: header check now doesn't scan "security data" and "segment3" areas anymore.
+- NDS/DSi: DSi sections scan has been removed, as it's not a part of header.
+- 3DS: "Erase card2 save" has been added in Tools. Fills the card2 save area with "FF".
+- 3DS: 3DS operations in Tools now accept .3dz files too.
