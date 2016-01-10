@@ -4,6 +4,7 @@ This is a small collection of various tools useful for modification and organiza
 * ctrtool and makerom by profi200 - https://github.com/profi200/Project_CTR
 * 3DStool by dnasdw - https://github.com/dnasdw/3dstool
 * xorer by archshift - https://github.com/archshift/xorer
+* padxorer by xerpi - https://github.com/polaris-/3ds_extract
 * 3DSlink by Dave J. Murphy - http://davejmurphy.com/3dslink/
 * smdhtool by devkitPro - https://github.com/devkitPro/3dstools
 * 3DSFAT16tool by d0k3 - https://github.com/d0k3/3DSFAT16tool
