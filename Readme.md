@@ -11,6 +11,7 @@ This is a small collection of various tools useful for modification and organiza
 * SEEDconv by d0k3 - https://github.com/d0k3/SEEDconv
 * ARMIPS by Kingcom - https://github.com/Kingcom/armips
 * make_cdn_cia, make_cia, rom_tool and extdata_tool by 3DSGuy - https://github.com/Tiger21820/ctr_toolkit
+* blz, huffman, lze, lzss, lzx and rle by CUE - http://www.romhacking.net/utilities/826/
 * DSDecmp by Barubary - https://github.com/barubary/dsdecmp
 * FunkyCIA.py by Cearp - https://gbatemp.net/threads/release-funkycia2-build-cias-from-your-eshop-content-super-easy-and-fast-2-1-fix.376941/
 * Various Python scripts by archshift - https://github.com/archshift/Decrypt9
