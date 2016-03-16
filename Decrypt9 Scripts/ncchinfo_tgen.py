@@ -167,36 +167,47 @@ def parseNCCH(fh, offs=0, idx=0, titleId='', standAlone=1):
     print tab + 'Title ID: %s' % reverseCtypeArray(header.titleId)
     print tab + 'Format version: %d' % header.formatVersion
     
-    uses7xCrypto = bytearray(header.flags)[3]
-    if uses7xCrypto:
+    ncchFlag3 = bytearray(header.flags)[3]
+    if ncchFlag3:
         print tab + 'Uses 7.x NCCH crypto'
-        
-    usesSeedCrypto = bytearray(header.flags)[7]
-    if usesSeedCrypto == 0x20:
-        usesSeedCrypto = 1
+       
+    fixed_key_flag = 0   
+    ncchFlag7 = bytearray(header.flags)[7]
+    if ncchFlag7 == 0x20:
         print tab + 'Uses 9.x SEED crypto'
+    elif ncchFlag7 == 0x1:
+        fixed_key_flag = ncchFlag7
+        print tab + 'Uses fixed crypto key'
+    elif ncchFlag7 == 0x4:
+        ncchFlag7 = 0; # prevent issues with old NCCH padgen
+        print tab + 'Uses no crypto'
+    elif ncchFlag7 == 0x2:
+        print tab + 'Uses no mount ROM fs (?)'
+        ncchFlag7 = 0; # prevent issues with old NCCH padgen
+    elif ncchFlag7 == 0:
+        print tab + 'Standard crypto case'
     else:
-        usesSeedCrypto = 0
-    
-    
+        print tab + 'UNKNOWN FLAG DETECTED?'
+        ncchFlag7 = 0; # prevent issues with old NCCH padgen
+   
     print ''
     
     if header.exhdrSize:
-        data = data + parseNCCHSection(header, ncchSection.exheader, 0, 0, 1, tab)
+        data = data + parseNCCHSection(header, ncchSection.exheader, 0, fixed_key_flag, 1, tab)
         data = data + genOutName(titleId, ncsdPartitions[idx], b'exheader')
         entries += 1
         print ''
     if header.exefsSize: #We need generate two xorpads for exefs if it uses 7.x crypto, since only a part of it uses the new crypto.
-        data = data + parseNCCHSection(header, ncchSection.exefs, 0, 0, 1, tab)
+        data = data + parseNCCHSection(header, ncchSection.exefs, 0, fixed_key_flag, 1, tab)
         data = data + genOutName(titleId, ncsdPartitions[idx], b'exefs_norm')
         entries += 1
-        if uses7xCrypto or usesSeedCrypto:
-            data = data + parseNCCHSection(header, ncchSection.exefs, uses7xCrypto, usesSeedCrypto, 0, tab)
+        if ncchFlag3 or ncchFlag7 == 0x20: #only for SEED crypto || 7x crypto
+            data = data + parseNCCHSection(header, ncchSection.exefs, ncchFlag3, ncchFlag7, 0, tab)
             data = data + genOutName(titleId, ncsdPartitions[idx], b'exefs_7x')
             entries += 1
         print ''
     if header.romfsSize:
-        data = data + parseNCCHSection(header, ncchSection.romfs, uses7xCrypto, usesSeedCrypto, 1, tab)
+        data = data + parseNCCHSection(header, ncchSection.romfs, ncchFlag3, ncchFlag7, 1, tab)
         data = data + genOutName(titleId, ncsdPartitions[idx], b'romfs')
         entries += 1
         print ''
@@ -205,7 +216,7 @@ def parseNCCH(fh, offs=0, idx=0, titleId='', standAlone=1):
     
     return [entries, data]
 
-def parseNCCHSection(header, type, uses7xCrypto, usesSeedCrypto, doPrint, tab):
+def parseNCCHSection(header, type, ncchFlag3, ncchFlag7, doPrint, tab):
     if type == ncchSection.exheader:
         sectionName = 'ExHeader'
         offset = 0x200 #Always 0x200
@@ -235,10 +246,10 @@ def parseNCCHSection(header, type, uses7xCrypto, usesSeedCrypto, doPrint, tab):
         print tab + '%s counter: %s' % (sectionName, hexlify(counter))
         print tab + '%s Megabytes(rounded up): %d' % (sectionName, sectionMb)
     
-    return struct.pack('<16s16sIIIIQ', str(counter), str(keyY), sectionMb, 0, usesSeedCrypto, uses7xCrypto, titleId)
+    return struct.pack('<16s16sIIIIQ', str(counter), str(keyY), sectionMb, 0, ncchFlag7, ncchFlag3, titleId)
 
 def genOutName(titleId, partitionName, sectionName):
-    outName = b'/%s.%s.%s.xorpad' % (titleId, partitionName, sectionName)
+    outName = b'/%s.%s.%s.xorpad' % (os.path.basename(fh.name), partitionName, sectionName)
     if len(outName) > 112:
         print "Output file name too large. This shouldn't happen."
         sys.exit()
@@ -249,10 +260,10 @@ def genOutName(titleId, partitionName, sectionName):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print 'usage: ncchinfo_gen.py files..'
+        print 'usage: ncchinfo_tgen.py files..'
         print '  Supports parsing both CCI(.3ds) and NCCH files.'
         print '  Wildcards are supported'
-        print '  Example: ncchinfo_gen.py *.ncch SM3DL.3ds'
+        print '  Example: ncchinfo_tgen.py *.ncch SM3DL.3ds'
         sys.exit()
     
     inpFiles = []
