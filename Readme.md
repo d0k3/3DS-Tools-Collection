@@ -10,6 +10,7 @@ This is a small collection of various tools useful for modification and organiza
 * 3DSFAT16tool by d0k3 - https://github.com/d0k3/3DSFAT16tool
 * SEEDconv by d0k3 - https://github.com/d0k3/SEEDconv
 * ARMIPS by Kingcom - https://github.com/Kingcom/armips
+* Nihstro by Neobrain - https://github.com/neobrain/nihstro
 * make_cdn_cia, make_cia, rom_tool and extdata_tool by 3DSGuy - https://github.com/Tiger21820/ctr_toolkit
 * blz, huffman, lze, lzss, lzx and rle by CUE - http://www.romhacking.net/utilities/826/
 * DSDecmp by Barubary - https://github.com/barubary/dsdecmp
