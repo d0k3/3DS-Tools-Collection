@@ -122,14 +122,14 @@ for i in range(len(sys.argv)):
         with open('decTitleKeys.bin', 'rb') as fh:
             nEntries = os.fstat(fh.fileno()).st_size / 32
             fh.seek(16, os.SEEK_SET)
-            print('This option checks 00040000 (game) titles only\n')
+            print('This option checks 00040000 (game) and 0004008c (dlc) titles only\n')
             for i in range(int(nEntries)):
                 fh.seek(8, os.SEEK_CUR)
                 titleId = fh.read(8)
                 decryptedTitleKey = fh.read(16)
 
                 baseurl = 'http://nus.cdn.c.shop.nintendowifi.net/ccs/download/' + (hexlify(titleId)).decode()
-                if (hexlify(titleId)).decode()[:8] != '00040000':
+                if (hexlify(titleId)).decode()[:8] != '00040000' and (hexlify(titleId)).decode()[:8] != '0004008c':
                     continue
                 else:
                     try:
@@ -360,18 +360,18 @@ if noDownload == 1:
     raise SystemExit(0)
 
 #this is _probably_ not needed in most situations
-#print('\n')
-#print('The NCCH on eShop games is encrypted and cannot be used')
-#print('without decryption on a 3DS. To fix this you should copy')
-#print('all .dec files in the Title ID folder to \'/D9Game/\'')
-#print('on your SD card, then use the following option in Decrypt9:')
-#print('\n')
-#print('\'Game Decryptor Options\' > \'NCCH/NCSD Decryptor\'')
-#print('\n')
-#print('Once you have decrypted the files, copy the .dec files from')
-#print('\'/D9Game/\' back into the Title ID folder, overwriting them.')
-#print('\n')
-#input('Press Enter once you have done this...')
+print('\n')
+print('The NCCH on eShop games is encrypted and cannot be used')
+print('without decryption on a 3DS. To fix this you should copy')
+print('all .dec files in the Title ID folder to \'/D9Game/\'')
+print('on your SD card, then use the following option in Decrypt9:')
+print('\n')
+print('\'Game Decryptor Options\' > \'NCCH/NCSD Decryptor\'')
+print('\n')
+print('Once you have decrypted the files, copy the .dec files from')
+print('\'/D9Game/\' back into the Title ID folder, overwriting them.')
+print('\n')
+input('Press Enter once you have done this...')
 
 # Create RSF File
 romrsf = 'Option:\n  MediaFootPadding: true\n  EnableCrypt: false\nSystemControlInfo:\n  SaveDataSize: $(SaveSize)K'
@@ -385,11 +385,11 @@ dot3ds_command_array.remove('')
 
 if makecia == 1:
     print('\nBuilding ' + titleid + '.cia...')
-    call(dotcia_command_array, stdout=DEVNULL, stderr=STDOUT)
+    call(dotcia_command_array, stderr=STDOUT)
 
 if make3ds == 1:
     print('\nBuilding ' + titleid + '.3ds...')
-    call(dot3ds_command_array, stdout=DEVNULL, stderr=STDOUT)
+    call(dot3ds_command_array, stderr=STDOUT)
 
 os.remove('rom.rsf')
 
