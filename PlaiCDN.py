@@ -380,8 +380,10 @@ with open('rom.rsf', 'wb') as fh:
 
 dotcia_command_array = ([makerom_command, '-f', 'cia', '-rsf', 'rom.rsf', '-o', titleid + '.cia', '-ckeyid', str(ckeyid), '-major', str((version & 0xfc00) >> 10), '-minor', str((version & 0x3f0) >> 4), '-micro', str(version & 0xF), '-DSaveSize=' + str(saveSize), str(dlcflag)] + command_cID)
 dot3ds_command_array = ([makerom_command, '-f', 'cci', '-rsf', 'rom.rsf', '-nomodtid', '-o', titleid + '.3ds', '-ckeyid', str(ckeyid), '-major', str((version & 0xfc00) >> 10), '-minor', str((version & 0x3f0) >> 4), '-micro', str(version & 0xF), '-DSaveSize=' + str(saveSize), str(dlcflag)] + command_cID)
-dotcia_command_array.remove('')
-dot3ds_command_array.remove('')
+if '' in dotcia_command_array:
+    dotcia_command_array.remove('')
+if '' in dot3ds_command_array:
+    dot3ds_command_array.remove('')
 
 if makecia == 1:
     print('\nBuilding ' + titleid + '.cia...')
