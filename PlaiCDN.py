@@ -46,22 +46,24 @@ def mkdir_p(path):
             pass
         else: raise
 
-##########From https://stackoverflow.com/questions/5783517/downloading-progress-bar-urllib2-python
+##########Based on https://stackoverflow.com/questions/5783517/downloading-progress-bar-urllib2-python
 def chunk_report(bytes_so_far, chunk_size, total_size):
     percent = float(bytes_so_far) / total_size
     percent = round(percent*100, 2)
-    sys.stdout.write('\rDownloaded %d of %d bytes (%0.2f%%)' % (bytes_so_far, total_size, percent))
+    sys.stdout.write('\rDownloaded and decrypted %d of %d bytes (%0.2f%%)' % (bytes_so_far, total_size, percent))
     sys.stdout.flush()
 
     if bytes_so_far >= total_size:
         print('\n')
 
-def chunk_read(response, outfname, chunk_size=2*1024*1024, report_hook=None):
+# download in 0x200000 byte chunks, decrypt the chunk with IVs described below, then write the decrypted chunk to disk (half the file size of decrypting separately!)
+def chunk_read(response, outfname, intitlekey, first_iv, chunk_size=0x200000, report_hook=None):
     fh = open(outfname,'wb')
     total_size = int(response.getheader('Content-Length'))
     total_size = int(total_size)
     bytes_so_far = 0
     data = []
+    first_chunk_read = 0
 
     while 1:
         if report_hook:
@@ -73,10 +75,19 @@ def chunk_read(response, outfname, chunk_size=2*1024*1024, report_hook=None):
         if not chunk:
              break
 
-        fh.write(chunk)
+        # IV of first chunk should be the Content ID + 28 0s like with the entire file, but each subsequent chunk should be the last 16 bytes of the previous still ciphered chunk
+        if first_chunk_read == 0:
+            decryptor = AES.new(intitlekey, AES.MODE_CBC, unhexlify(first_iv))
+            first_chunk_read = 1
+        else:
+            decryptor = AES.new(intitlekey, AES.MODE_CBC, prev_chunk[(0x200000 - 16):0x200000])
+
+        dec_chunk = decryptor.decrypt(chunk)
+        prev_chunk = chunk
+
+        fh.write(dec_chunk)
 
     fh.close()
-##########
 
 def SystemUsage():
     print('Usage: python3 PlaiCDN.py <TitleID TitleKey [-redown -redec -no3ds -nocia] or [-check]> or [-deckey] or [-checkbin]')
@@ -84,25 +95,10 @@ def SystemUsage():
     print('-check    : checks if title id matches key')
     print('-checkbin : checks titlekeys from decTitleKeys.bin')
     print('-redown   : redownload content')
-    print('-nodown   : don\'t download content, just print links')
     print('-redec    : re-attempt content decryption')
     print('-no3ds    : don\'t build 3DS file')
     print('-nocia    : don\'t build CIA file')
     raise SystemExit(0)
-
-#adapted from http://eli.thegreenplace.net/2010/06/25/aes-encryption-of-files-in-python-with-pycrypto
-def decrypt_file(in_key, in_filename, out_filename, in_iv, chunksize=24*1024):
-    with open(in_filename, 'rb') as infile:
-        iv = unhexlify(in_iv)
-        key = unhexlify(in_key)
-        decryptor = AES.new(key, AES.MODE_CBC, iv)
-
-        with open(out_filename, 'wb') as outfile:
-            while True:
-                chunk = infile.read(chunksize)
-                if len(chunk) == 0:
-                    break
-                outfile.write(decryptor.decrypt(chunk))
 
 #from https://github.com/Relys/3DS_Multi_Decryptor/blob/master/ticket-titlekey_stuff/printKeys.py
 for i in range(len(sys.argv)):
@@ -129,6 +125,7 @@ for i in range(len(sys.argv)):
                 decryptedTitleKey = fh.read(16)
 
                 baseurl = 'http://nus.cdn.c.shop.nintendowifi.net/ccs/download/' + (hexlify(titleId)).decode()
+                # if it's not a game or dlc, skip to the next title
                 if (hexlify(titleId)).decode()[:8] != '00040000' and (hexlify(titleId)).decode()[:8] != '0004008c':
                     continue
                 else:
@@ -142,7 +139,7 @@ for i in range(len(sys.argv)):
                     for i in range(contentCount):
                         cOffs = 0xB04+(0x30*i)
                         cID = format(unpack('>I', tmd[cOffs:cOffs+4])[0], '08x')
-                        # use range requests to download bytes 0 through 271, needed because AES-128-CBC encrypts in chunks of 128 bits
+                        # use range requests to download bytes 0 through 271, needed 272 instead of 260 because AES-128-CBC encrypts in chunks of 128 bits
                         try:
                             checkReq = urllib.request.Request('%s/%s'%(baseurl, cID))
                             checkReq.headers['Range'] = 'bytes=%s-%s' % (0, 271)
@@ -161,10 +158,11 @@ for i in range(len(sys.argv)):
                         print(((hexlify(titleId).decode()) + ': ' + (hexlify(decryptedTitleKey)).decode()))
             raise SystemExit(0)
 
-
+#if args for deckeys or checkbin weren't used above, remaining functions require 3 args minimum
 if len(sys.argv) < 3:
     SystemUsage()
 
+# default values
 titleid = sys.argv[1]
 titlekey = sys.argv[2]
 forceDownload = 0
@@ -172,38 +170,36 @@ forceDecrypt = 0
 make3ds = 1
 makecia = 1
 nohash = 0
-dlversion = -1
-noDownload = 0
-noDownloadFile = None
 checkKey = 0
 checkTempOut = None
 
+# check args
 for i in range(len(sys.argv)):
     if sys.argv[i] == '-redown': forceDownload = 1
     elif sys.argv[i] == '-redec': forceDecrypt = 1
     elif sys.argv[i] == '-no3ds': make3ds = 0
     elif sys.argv[i] == '-nocia': makecia = 0
-    elif sys.argv[i] == '-nodown': noDownload = 1
     elif sys.argv[i] == '-check': checkKey = 1
 
 if len(titleid) != 16 or len(titlekey) != 32:
     print('Invalid arguments')
     raise SystemExit(0)
 
+# set CDN default URL
 baseurl = 'http://nus.cdn.c.shop.nintendowifi.net/ccs/download/' + titleid
 
+# download tmd and set to 'tmd' object
 try:
-    tmd = urllib.request.urlopen(baseurl + '/tmd' + ('.' + str(dlversion), '')[dlversion == -1])
+    tmd = urllib.request.urlopen(baseurl + '/tmd')
 except urllib.error.URLError as e:
     print('ERROR: Bad title ID?')
     raise SystemExit(0)
-
 tmd = tmd.read()
 
-if checkKey != 1:
-    mkdir_p(titleid + ('_v' + str(dlversion), '')[dlversion == -1])
-    open(titleid + ('_v' + str(dlversion), '')[dlversion == -1] + '/tmd','wb').write(tmd)
+#create folder
+mkdir_p(titleid)
 
+# https://www.3dbrew.org/wiki/Title_metadata#Signature_Data
 if bytes('\x00\x01\x00\x04', 'UTF-8') not in tmd[:4]:
     print('Unexpected signature type.')
     raise SystemExit(0)
@@ -212,6 +208,7 @@ if bytes('\x00\x01\x00\x04', 'UTF-8') not in tmd[:4]:
 if titleid[:8] != '00040000':
     make3ds = 0
 
+# Check OS, path, and current dir to set makerom location
 if 'Windows' in platform.system():
     if os.path.isfile('makerom.exe'):
         makerom_command = 'makerom.exe'
@@ -250,11 +247,6 @@ contentCount = unpack('>H', tmd[0x206:0x208])[0]
 if contentCount > 8:
     make3ds = 0
 
-# If speicifed nodown option, print links to a file.
-if noDownload == 1:
-    noDownloadFile = open('CDNLinks.txt', 'a')
-    noDownloadFile.write('TitleId %s\n'%(titleid))
-
 command_cID = []
 
 # Download Contents
@@ -274,11 +266,12 @@ for i in range(contentCount):
     print('Content Size:  ' + cSIZE)
     print('Content Hash:  ' + (hexlify(cHASH)).decode())
 
-    outfname = titleid + ('_v' + str(dlversion), '')[dlversion == -1] + '/' + cID
+    # set output location to a folder named for title id and contentid.dec as the file
+    outfname = titleid + '/' + cID + '.dec'
 
     if checkKey == 1:
         print('Downloading and decrypting the first 272 bytes of ' + cID + ' for key check')
-        # use range requests to download bytes 0 through 271, needed because AES-128-CBC encrypts in chunks of 128 bits
+        # use range requests to download bytes 0 through 271, needed 272 instead of 260 because AES-128-CBC encrypts in chunks of 128 bits
         try:
             checkReq = urllib.request.Request('%s/%s'%(baseurl, cID))
             checkReq.headers['Range'] = 'bytes=%s-%s' % (0, 271)
@@ -301,24 +294,13 @@ for i in range(contentCount):
         print('Titlekey successfully verified to match title ID ' + titleid)
         raise SystemExit(0)
 
+    # if the content location does not exist, redown is set, or the size is incorrect redownload
     if os.path.exists(outfname) == 0 or forceDownload == 1 or os.path.getsize(outfname) != unpack('>Q', tmd[cOffs+8:cOffs+16])[0]:
-        if noDownload == 0:
-            response = urllib.request.urlopen(baseurl + '/' + cID)
-            chunk_read(response, outfname, report_hook=chunk_report)
+        response = urllib.request.urlopen(baseurl + '/' + cID)
+        chunk_read(response, outfname, unhexlify(titlekey), cIDX + '0000000000000000000000000000', report_hook=chunk_report)
 
-            #If we redownloaded the content, then decrypting it is implied.
-            print("Decrypting " + cID + "...")
-            decrypt_file(titlekey, outfname, outfname + '.dec', cIDX + '0000000000000000000000000000')
-
-        else:
-            print(('Content Link:  %s\n Target File:  %s\n\n' % (baseurl + '/' + cID, outfname)))
-            noDownloadFile.write('%s:%s\n'%(outfname,baseurl+'/'+cID))
-            continue
-    elif os.path.exists(outfname + '.dec') == 0 or forceDecrypt == 1 or os.path.getsize(outfname + '.dec') != unpack('>Q', tmd[cOffs+8:cOffs+16])[0]:
-        print("Decrypting " + cID + "...")
-        decrypt_file(titlekey, outfname, outfname + '.dec', cIDX + '0000000000000000000000000000')
-
-    with open(outfname + '.dec','rb') as fh:
+    # check hash and NCCH of downloaded content
+    with open(outfname,'rb') as fh:
         fh.seek(0, os.SEEK_END)
         fhSize = fh.tell()
         if fh.tell() != unpack('>Q', tmd[cOffs+8:cOffs+16])[0]:
@@ -352,14 +334,8 @@ for i in range(contentCount):
         fSize += fh.tell()
 
     print('\n')
-    command_cID = command_cID + ['-i', outfname + '.dec' + ':0x' + cIDX + ':0x' + cID]
+    command_cID = command_cID + ['-i', outfname + ':0x' + cIDX + ':0x' + cID]
 
-if noDownload == 1:
-    noDownloadFile.close()
-    print('URL links appended to CDNLinks.txt')
-    raise SystemExit(0)
-
-#this is _probably_ not needed in most situations
 print('\n')
 print('The NCCH on eShop games is encrypted and cannot be used')
 print('without decryption on a 3DS. To fix this you should copy')
@@ -378,6 +354,7 @@ romrsf = 'Option:\n  MediaFootPadding: true\n  EnableCrypt: false\nSystemControl
 with open('rom.rsf', 'wb') as fh:
     fh.write(romrsf.encode())
 
+#set makerom command with subproces, removing '' if dlcflag isn't set (otherwise makerom breaks)
 dotcia_command_array = ([makerom_command, '-f', 'cia', '-rsf', 'rom.rsf', '-o', titleid + '.cia', '-ckeyid', str(ckeyid), '-major', str((version & 0xfc00) >> 10), '-minor', str((version & 0x3f0) >> 4), '-micro', str(version & 0xF), '-DSaveSize=' + str(saveSize), str(dlcflag)] + command_cID)
 dot3ds_command_array = ([makerom_command, '-f', 'cci', '-rsf', 'rom.rsf', '-nomodtid', '-o', titleid + '.3ds', '-ckeyid', str(ckeyid), '-major', str((version & 0xfc00) >> 10), '-minor', str((version & 0x3f0) >> 4), '-micro', str(version & 0xF), '-DSaveSize=' + str(saveSize), str(dlcflag)] + command_cID)
 if '' in dotcia_command_array:
