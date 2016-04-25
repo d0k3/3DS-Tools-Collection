@@ -14,7 +14,8 @@ This is a small collection of various tools useful for modification and organiza
 * make_cdn_cia, make_cia, rom_tool and extdata_tool by 3DSGuy - https://github.com/Tiger21820/ctr_toolkit
 * blz, huffman, lze, lzss, lzx and rle by CUE - http://www.romhacking.net/utilities/826/
 * DSDecmp by Barubary - https://github.com/barubary/dsdecmp
-* FunkyCIA.py by Cearp - https://gbatemp.net/threads/release-funkycia2-build-cias-from-your-eshop-content-super-easy-and-fast-2-1-fix.376941/
+* FunkyCIA.py by Cearp - https://github.com/llakssz/FunKeyCIA
+* FunKeyCIA by Cearp - https://github.com/llakssz/FunkyCIA
 * Various Python scripts by archshift - https://github.com/archshift/Decrypt9
 * CDNto3DS and SDto3DS by Relys - https://github.com/Relys/3DS_Multi_Decryptor
 * EmuNAND tool by n1ghty - https://gbatemp.net/threads/emunand-tool-release-and-support-thread.359239/
