@@ -30,3 +30,4 @@ This is a small collection of various tools useful for modification and organiza
 * Gateway ROM Cleaner by Skar the Blood Child - https://gbatemp.net/threads/gateway-rom-patcher.364034/
 * Crappy Tiny Reader by PsyKo - http://www.3dbrew.org/wiki/Crappy_Tiny_Reader
 * Dependency Walker by Microsoft - http://www.dependencywalker.com/
+* bin2c by cyco130 - https://sourceforge.net/projects/bin2c/
